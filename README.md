@@ -40,7 +40,7 @@ hacked-UI/
 1. রিপোজিটরি ক্লোন করুন:
 
    ```bash
-   git clone https://github.com/masum1234-gok/hacked-UI.git
+   git clone https://github.com/mir-md-masum-billah/hacked-UI.git
    ```
 
 2. প্রজেক্ট ফোল্ডারে যান:
