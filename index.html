@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>YOU ARE HACKED</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: black;
+            font-family: 'Courier New', monospace;
+            height: 100%;
+            width: 100%;
+        }
+
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .content {
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            z-index: 2;
+            color: #0f0;
+        }
+
+        .step {
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .hacked {
+            border: 2px solid red;
+            padding: 20px 40px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            font-weight: bold;
+            color: red;
+            display: none;
+            animation: glitch 0.3s infinite alternate, shake 0.2s infinite;
+            text-shadow: 0 0 10px red, 0 0 20px red;
+            z-index: 5;
+        }
+
+        @keyframes glitch {
+            0% {
+                text-shadow: 2px 2px red, -2px -2px blue;
+                transform: scale(1.02) rotate(-1deg);
+            }
+
+            20% {
+                text-shadow: -2px 1px lime, 2px -1px red;
+                transform: scale(1.05) rotate(1deg);
+            }
+
+            40% {
+                text-shadow: 1px -1px cyan, -1px 1px red;
+                transform: scale(1.08) rotate(-2deg);
+            }
+
+            60% {
+                text-shadow: -3px -3px red, 3px 3px blue;
+                transform: scale(1.1) rotate(1deg);
+            }
+
+            80% {
+                text-shadow: 0 0 20px red, 0 0 30px black;
+                transform: scale(1.05) rotate(-1deg);
+            }
+
+            100% {
+                text-shadow: 2px -2px red, -2px 2px blue;
+                transform: scale(1.07) rotate(2deg);
+            }
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translate(-50%, -50%) translate(0px, 0px);
+            }
+
+            20% {
+                transform: translate(-50%, -50%) translate(-3px, 3px);
+            }
+
+            40% {
+                transform: translate(-50%, -50%) translate(3px, -3px);
+            }
+
+            60% {
+                transform: translate(-50%, -50%) translate(-3px, -3px);
+            }
+
+            80% {
+                transform: translate(-50%, -50%) translate(3px, 3px);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) translate(0px, 0px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="matrix"></canvas>
+
+    <div class="content" id="content">
+        <div id="Reading" class="step">Reading...</div>
+        <div id="Initializing" class="step">Initializing...</div>
+        <div id="Password" class="step">Password Cracking...</div>
+        <div id="Sending" class="step">Sending to Dark Web...</div>
+        <div id="Cleaning" class="step">Cleaning Logs...</div>
+    </div>
+
+    <div class="hacked" id="hacked">DEVICE IS HACKED!</div>
+
+    <audio id="alarm" src="https://www.soundjay.com/button/beep-10.wav"></audio>
+
+    <script>
+        const steps = [
+            { element: document.getElementById("Reading"), text: "Scanning System Files", text2: "System Accessed" },
+            { element: document.getElementById("Initializing"), text: "Installing Malware", text2: "Malware Injected" },
+            { element: document.getElementById("Password"), text: "Cracking Passwords", text2: "All Passwords Compromised" },
+            { element: document.getElementById("Sending"), text: "Uploading to Dark Web", text2: "Data Sold" },
+            { element: document.getElementById("Cleaning"), text: "Erasing System Logs", text2: "Traces Removed" }
+        ];
+
+        const hackedText = document.getElementById("hacked");
+        const alarm = document.getElementById("alarm");
+
+        function loadStep(stepObj) {
+            return new Promise(resolve => {
+                let count = 0;
+                let dot = "";
+                let repeat = 0;
+                let maxrepeat = Math.floor(Math.random() * 2 + 3);
+
+                stepObj.element.style.display = "block";
+
+                const interval = setInterval(() => {
+                    count++;
+                    dot = ".".repeat(count % 4);
+                    stepObj.element.innerText = stepObj.text + dot;
+
+                    if (count % 4 === 0) {
+                        repeat++;
+                        if (repeat >= maxrepeat) {
+                            clearInterval(interval);
+                            stepObj.element.innerText = stepObj.text2 + " ✔";
+                            resolve();
+                        }
+                    }
+                }, 300);
+            });
+        }
+
+        async function startSteps() {
+            for (let i = 0; i < steps.length; i++) {
+                await loadStep(steps[i]);
+            }
+
+            document.querySelectorAll('.step').forEach(el => el.style.display = 'none');
+            hackedText.style.display = 'block';
+            alarm.play();
+            setInterval(drawMatrix, 33);
+        }
+
+        const canvas = document.getElementById("matrix");
+        const ctx = canvas.getContext("2d");
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&()&^%";
+        const chars = letters.split("");
+        const fontSize = 14;
+        let columns = Math.floor(width / fontSize);
+        let drops = Array(columns).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.fillStyle = "#0F0";
+            ctx.font = fontSize + "px monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+        window.addEventListener("resize", () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            columns = Math.floor(width / fontSize);
+            drops = Array(columns).fill(1);
+        });
+
+        startSteps();
+    </script>
+
+</body>
+
+</html>
